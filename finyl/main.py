@@ -25,6 +25,7 @@ def listen():
             last_line = line
         return last_line
 
+
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler)
     print("Listening to new events...")

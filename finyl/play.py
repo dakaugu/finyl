@@ -14,9 +14,13 @@ if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
 
     arg_parser.add_argument("playlist")
+    arg_parser.add_argument("-track")
+    arg_parser.add_argument("-offset")
 
     args = arg_parser.parse_args()
     print(args.playlist)
+    track = int(args.track) if args.track else None
+    offset = int(args.offset) if args.offset else None
 
     initialize(PREFERENCES)
 
@@ -25,4 +29,4 @@ if __name__ == "__main__":
     p.start()
     print("downloading album")
     player = Player()
-    player.play_album(album)
+    player.play_album(album, track, offset)
