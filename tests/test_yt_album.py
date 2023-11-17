@@ -12,6 +12,7 @@ def mock_get(mocker):
 
 
 def test_album_has_playlist_info(mock_get):
+    """Tests basic information from getting album"""
     mock_get.return_value = None
     album = Album("123")
     assert album.id == "123"
