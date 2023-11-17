@@ -5,12 +5,9 @@ from finyl.yt_album import Album
 from finyl.audio_player import Player
 from finyl.starter import initialize
 
-PREFERENCES = {
-    "vinyl_feel": 0
-}
+PREFERENCES = {"vinyl_feel": 0}
 
 if __name__ == "__main__":
-
     arg_parser = argparse.ArgumentParser()
 
     arg_parser.add_argument("playlist")
@@ -19,8 +16,8 @@ if __name__ == "__main__":
 
     args = arg_parser.parse_args()
     print(args.playlist)
-    track = int(args.track) if args.track else None
-    offset = int(args.offset) if args.offset else None
+    track = int(args.track) if args.track else 0
+    offset = int(args.offset) if args.offset else 0
 
     initialize(PREFERENCES)
 

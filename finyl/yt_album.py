@@ -5,21 +5,21 @@ from pytube import Playlist
 YT_URI = "http://www.youtube.com/"
 DOWNLLOAD_PATH = "/Users/dwightaugustin/Downloads/"
 
-class Album:
 
+class Album:
     def __init__(self, id):
         self.id = id
         self.playlist_path = f"{DOWNLLOAD_PATH}{id}"
         self.playlist = None
         self.get(id)
 
-    def get(self, playlist_id):
+    def get(self, playlist_id: str) -> None:
         """Fetch playlist info"""
         self.playlist = Playlist(YT_URI + "playlist?list=" + playlist_id)
         if self.playlist:
             self.playlist_items = len(self.playlist)
 
-    def download(self, overwrite=False):
+    def download(self, overwrite=False) -> None:
         """Creates path download songs
         overwrite: ignore file existence and remove older files
         """
@@ -30,7 +30,7 @@ class Album:
         if not self.playlist:
             self.playlist = Playlist(YT_URI + "playlist?list=" + self.id)
 
-        if overwrite: #TODO: TOBEDONE
+        if overwrite:  # TODO: TOBEDONE
             pass
 
         i = 1
@@ -43,4 +43,3 @@ class Album:
                 video.streams.filter().get_audio_only().download(filename=file_name)
                 print(f"{i} downloaded")
             i = i + 1
- 

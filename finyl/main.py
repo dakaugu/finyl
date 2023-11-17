@@ -29,7 +29,7 @@ def listen():
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler)
     print("Listening to new events...")
-  
+
     last_command = None
     while True:
         time.sleep(1)

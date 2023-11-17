@@ -1,4 +1,3 @@
-
 import os
 
 from enum import Enum
@@ -12,7 +11,6 @@ class State(Enum):
 
 
 class Player:
-
     def __init__(self):
         self.state = State.READY
         self.cur_audio = 1
@@ -20,7 +18,7 @@ class Player:
     def play_audio(self, file_path, offset):
         sound = AudioSegment.from_file(file_path)
         if offset:
-            sound = sound[-(sound.duration_seconds - offset) * 1000:]
+            sound = sound[-(sound.duration_seconds - offset) * 1000 :]
         self.state = State.PLAYING
         playback.play(sound)
         self.state = State.READY
@@ -32,15 +30,16 @@ class Player:
             self.cur_audio = track
         while self.cur_audio <= album.playlist_items:
             cur = f"{album.playlist_path}/{self.cur_audio}.mp3"
-            if os.path.exists(
-                f"{album.playlist_path}/{self.cur_audio+1}.mp3"
-                ) or self.cur_audio >= album.playlist_items: #TODO: fix s + 1 hack ...should be cur
+            if (
+                os.path.exists(f"{album.playlist_path}/{self.cur_audio+1}.mp3")
+                or self.cur_audio >= album.playlist_items
+            ):  # TODO: fix s + 1 hack ...should be cur
                 print(f"Now playing: {self.cur_audio}")
                 self.play_audio(cur, offset)
                 self.cur_audio = self.cur_audio + 1
                 if offset:
-                    offset = None # reset offset to start the next song from top
-        self.cur_audio = 1 # reset
+                    offset = 0  # reset offset to start the next song from top
+        self.cur_audio = 1  # reset
 
-    def track_position():
+    def track_position(self):
         pass
