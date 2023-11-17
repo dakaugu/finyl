@@ -16,5 +16,5 @@ def test_album_has_playlist_info(mock_get):
     album = Album("123")
     assert album.id == "123"
     assert album.playlist_path == f"{DOWNLLOAD_PATH}{album.id}"
-    assert album.playlist == None
+    assert album.playlist is None
     assert isinstance(album.playlist, type(None))
