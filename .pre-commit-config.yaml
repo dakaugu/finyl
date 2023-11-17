@@ -1,0 +1,15 @@
+default_stages: [commit]
+repos:
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
+- repo: local
+  hooks:
+  - id: tests
+    stages: [push]
+    name: tests
+    entry: poetry run pytest
+    language: system
+    types: [python]
+    pass_filenames: false
