@@ -1,15 +1,12 @@
 import os
 from pytube import Playlist
-
-
-YT_URI = "http://www.youtube.com/"
-DOWNLLOAD_PATH = "/Users/dwightaugustin/Downloads/"
+from finyl.settings import YT_URI, DOWNLOAD_PATH
 
 
 class Album:
     def __init__(self, id):
         self.id = id
-        self.playlist_path = f"{DOWNLLOAD_PATH}{id}"
+        self.playlist_path = f"{DOWNLOAD_PATH}{id}"
         self.playlist = None
         self.get(id)
 

@@ -2,9 +2,9 @@ import os
 import signal
 import subprocess
 import time
+from finyl.settings import EVENTS_PATH
 
 
-EVENTS_FILE = os.path.dirname(__file__) + "/finyl_events.txt"
 PLAYER_PID = None
 
 
@@ -19,7 +19,7 @@ def handler(signum, frame):
 
 
 def listen():
-    with open(EVENTS_FILE) as f:
+    with open(EVENTS_PATH) as f:
         last_line = None
         for line in f:
             last_line = line
