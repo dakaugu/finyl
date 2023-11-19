@@ -3,9 +3,7 @@ import argparse
 from multiprocessing import Process
 from finyl.yt_album import Album
 from finyl.audio_player import Player
-from finyl.starter import initialize
 
-PREFERENCES = {"vinyl_feel": 0}
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
@@ -18,8 +16,6 @@ if __name__ == "__main__":
     print(args.playlist)
     track = int(args.track) if args.track else 0
     offset = int(args.offset) if args.offset else 0
-
-    initialize(PREFERENCES)
 
     album = Album(args.playlist)
     p = Process(target=album.download, args=())

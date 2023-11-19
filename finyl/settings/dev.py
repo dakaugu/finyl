@@ -1,2 +1,3 @@
-DOWNLOAD_PATH = "/Users/dwightaugustin/Downloads/"
-EVENTS_PATH = "/Users/dwightaugustin/Downloads/finyl_events.txt"
+BASE_PATH = "/Users/dwightaugustin/Downloads/finyl"
+DOWNLOAD_PATH = f"{BASE_PATH}/cache/"
+EVENTS_PATH = f"{BASE_PATH}/events.txt"

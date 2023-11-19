@@ -1,8 +1,9 @@
 import os
+import time
 
 from enum import Enum
 from pydub import AudioSegment, playback
-from pytube import Playlist
+from finyl.yt_album import Album
 
 
 class State(Enum):
@@ -15,7 +16,7 @@ class Player:
         self.state = State.READY
         self.cur_audio = 1
 
-    def play_audio(self, file_path, offset):
+    def play_audio(self, file_path: str, offset: int) -> None:
         sound = AudioSegment.from_file(file_path)
         if offset:
             sound = sound[-(sound.duration_seconds - offset) * 1000 :]
@@ -23,7 +24,7 @@ class Player:
         playback.play(sound)
         self.state = State.READY
 
-    def play_album(self, album: Playlist, track: int, offset: int) -> None:
+    def play_album(self, album: Album, track: int, offset: int) -> None:
         """play a whole playlist from directory"""
         print(f"Now playing: {album.playlist.title}")
         if track:
@@ -39,6 +40,9 @@ class Player:
                 self.cur_audio = self.cur_audio + 1
                 if offset:
                     offset = 0  # reset offset to start the next song from top
+            else:
+                print("Track not yet downloaded!")
+                time.sleep(1)
         self.cur_audio = 1  # reset
 
     def track_position(self):
