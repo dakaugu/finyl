@@ -3,9 +3,11 @@ import signal
 import subprocess
 import time
 from finyl.settings import EVENTS_PATH
+from finyl.utils import initialize
 
 
 PLAYER_PID = None
+PREFERENCES = {"vinyl_feel": 0}
 
 
 def handler(signum, frame):
@@ -28,6 +30,7 @@ def listen():
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler)
+    initialize(PREFERENCES)
     print("Listening to new events...")
 
     last_command = None
