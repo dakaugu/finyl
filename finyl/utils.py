@@ -16,6 +16,7 @@ def play_vinyl_crackle() -> None:
 
 
 def init_dirs() -> None:
+    """Create necessary directories for finyl software to run"""
     for path in [BASE_PATH, DOWNLOAD_PATH]:
         if not os.path.exists(path):
             print(f"{path} path does not exist. Creating it...")
@@ -25,12 +26,13 @@ def init_dirs() -> None:
 
 
 def init_event_file() -> None:
+    """Create event file that finyl listens to for activities"""
     if not os.path.exists(EVENTS_PATH):
         print("finyl event file does not exist. Creating it... ")
         with open(EVENTS_PATH, "w") as event_file:
             event_file.write("")
     else:
-        print("finyl event file exists")
+        print(f"{EVENTS_PATH} exists")
 
 
 def initialize(preferences: dict) -> None:
