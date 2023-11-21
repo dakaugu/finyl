@@ -38,7 +38,8 @@ if __name__ == "__main__":
         time.sleep(1)
         command = listen()
         if command and command != last_command:
-            print("New event found!")
+            print("New event found:")
+            print(command)
             if PLAYER_PID:
                 os.kill(PLAYER_PID, signal.SIGKILL)
                 PLAYER_PID = None
