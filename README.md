@@ -51,7 +51,7 @@ sudo apt install gh
 ```
 Authenticate against github by reading the token from a file
 ```shell
-gh auth login --with-token < /media/usb_drivee/gh_token.txt
+gh auth login --with-token < /media/usb_drive/gh_token.txt
 ssh-keygen -t ed25519 -C "your_email@example.com"
 gh config set git_protocol ssh -h github.com
 gh ssh-key add ~/.ssh/<my-key>.pub
