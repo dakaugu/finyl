@@ -6,7 +6,7 @@ echo "Adding environment variables"
 export FINYL_ENV=FINYL_PI
 
 echo "installing necessary software"
-essential_pckgs=(
+declare -a essential_pckgs=(
   build-essential
   zlib1g-dev
   libncurses5-dev
@@ -27,13 +27,13 @@ essential_pckgs=(
   libi2c-dev
   python3-smbus
 )
-sudo apt install -y "${essential_pckgs[@]}"
+sudo apt-get install -y "${essential_pckgs[@]}"
 
 
 sudo ln -s /usr/bin/python3 /usr/bin/python
 
 echo "Installing necessary audio dependencies"
-sudo apt install -y 
+sudo apt-get install -y
     ffmpeg 
     python3-pyaudio 
     libasound2-dev 
