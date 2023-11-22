@@ -18,6 +18,7 @@ RUN apt install -y ffmpeg python3-pyaudio python3-dev libpython3.11-dev \
 
 COPY . .
 
+# curl install instead
 RUN pip install poetry
 
 # install deps
