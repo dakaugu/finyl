@@ -6,40 +6,38 @@ echo "Adding environment variables"
 export FINYL_ENV=FINYL_PI
 
 echo "installing necessary software"
-declare -a essential_pckgs=(
-  build-essential
-  zlib1g-dev
-  libncurses5-dev
-  libgdbm-dev
-  libnss3-dev
-  libssl-dev
-  libreadline-dev
-  libffi-dev
-  libsqlite3-dev
-  wget
-  libbz2-dev
-  python3.11
-  python3-dev
-  libpython3.11-dev
-  python3-pip
-  raspi-config
-  i2c-tools
-  libi2c-dev
-  python3-smbus
-)
-sudo apt-get install -y "${essential_pckgs[@]}"
-
+sudo apt update
+sudo apt install -y \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev  \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    libsqlite3-dev \
+    wget \
+    libbz2-dev \
+    python3.11 \
+    python3-dev \
+    libpython3.11-dev \
+    python3-pip \
+    raspi-config \
+    i2c-tools \
+    libi2c-dev \
+    python3-smbus
 
 sudo ln -s /usr/bin/python3 /usr/bin/python
 
 echo "Installing necessary audio dependencies"
-sudo apt-get install -y
-    ffmpeg 
-    python3-pyaudio 
-    libasound2-dev 
-    portaudio19-dev 
-    libportaudio2 
-    libportaudiocpp0 
+sudo apt install -y \
+    ffmpeg \
+    python3-pyaudio \
+    libasound2-dev \
+    portaudio19-dev \
+    libportaudio2 \
+    libportaudiocpp0 \
     alsa-utils
 
 echo "Installing Poetry"
