@@ -6,7 +6,7 @@ echo "Adding environment variables"
 export FINYL_ENV=FINYL_PI
 
 echo "installing necessary software"
-essential_pckgs = (
+essential_pckgs=(
   build-essential
   zlib1g-dev
   libncurses5-dev
