@@ -41,9 +41,11 @@ sudo apt install -y \
 
 echo "Installing Poetry"
 curl -sSL https://install.python-poetry.org | python3 -
+export PATH="/home/ubuntu/.local/bin:$PATH"
+poetry --version
 
 echo "Add permission to file"
-sudo chmod 777/var/
+sudo chmod 777 /var/
 
 echo "Install Python dependencies"
 poetry install
