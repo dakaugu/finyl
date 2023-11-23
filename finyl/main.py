@@ -12,6 +12,7 @@ PREFERENCES = {"vinyl_feel": 0}
 
 def handler(signum, frame):
     print("shutting down player")
+    time.sleep(1)
     try:
         if PLAYER_PID:
             os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)

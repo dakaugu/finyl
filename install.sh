@@ -34,7 +34,7 @@ sudo nala install -y \
 sudo ln -s /usr/bin/python3 /usr/bin/python
 
 echo "Installing raspi-config"
-sudo apt install raspi-config
+sudo apt install -y raspi-config
 
 echo "Installing necessary audio dependencies"
 sudo nala install -y \
