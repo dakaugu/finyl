@@ -29,7 +29,7 @@ sudo nala install -y \
     libi2c-dev \
     python3-smbus \
     curl \
-    nmcli
+    network-manager
 
 sudo ln -s /usr/bin/python3 /usr/bin/python
 
