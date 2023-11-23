@@ -13,7 +13,7 @@ if __name__ == "__main__":
     arg_parser.add_argument("-offset")
 
     args = arg_parser.parse_args()
-    print(args.playlist)
+
     track = int(args.track) if args.track else 0
     offset = int(args.offset) if args.offset else 0
 
