@@ -14,7 +14,7 @@ def handler(signum, frame):
     print("shutting down player")
     try:
         if PLAYER_PID:
-            os.killpg(os.getpgid(PLAYER_PID), signal.SIGTERM)
+            os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
     except Exception as e:
         print(e)
     exit(1)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
             print("New event found:")
             print(command)
             if PLAYER_PID:
-                os.kill(PLAYER_PID, signal.SIGKILL)
+                os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
                 PLAYER_PID = None
             if command == "stop":
                 pass
