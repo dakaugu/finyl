@@ -23,7 +23,12 @@ network:
                     password: "PASSWORD-HERE"
             dhcp4: true
 ```
-Boot up a Raspberry Pi with the drive. Get your drive's name and mount it. <br>
+Boot up a Raspberry Pi with the drive.
+If `nmcli` is installed Connect to WiFi (skip if not)<br>
+```shell
+nmcli d wifi connect <wifi ssid> password <password>
+```
+ Get your drive's name and mount it. <br>
 ```shell
 sudo lsblk
 ```

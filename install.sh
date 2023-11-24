@@ -28,12 +28,13 @@ sudo nala install -y \
     i2c-tools \
     libi2c-dev \
     python3-smbus \
-    curl
+    curl \
+    network-manager
 
 sudo ln -s /usr/bin/python3 /usr/bin/python
 
 echo "Installing raspi-config"
-sudo apt install raspi-config
+sudo apt install -y raspi-config
 
 echo "Installing necessary audio dependencies"
 sudo nala install -y \
@@ -52,6 +53,7 @@ sudo raspi-config
 echo "Installing Poetry"
 curl -sSL https://install.python-poetry.org | python3 -
 export PATH="/home/${_user}/.local/bin:$PATH"
+export PATH="/home/ubuntu/.local/bin:$PATH"
 export PATH="${_user}/.local/bin:$PATH"
 poetry --version
 
