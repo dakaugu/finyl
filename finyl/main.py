@@ -14,7 +14,7 @@ def handler(signum, frame):
     print("shutting down player")
     try:
         if PLAYER_PID:
-            os.kill(PLAYER_PID, signal.SIGKILL)
+            os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
     except Exception as e:
         print(e)
     exit(1)
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                 pass
             else:
                 player_process = subprocess.Popen(
-                    f"python3 finyl/play.py {command}", shell=True
+                    f"python3 finyl/play.py {command}", shell=True, preexec_fn=os.setsid
                 )
                 PLAYER_PID = player_process.pid
             last_command = command
