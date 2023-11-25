@@ -45,10 +45,10 @@ def nfc_listen() -> None:
     last_id = None
     while True:
         if rfid.tagPresent():  # if an RFID tag is present
-            id = rfid.readID()  # get the id
+            text = rfid.readText()  # get the id
             if last_id != id:
                 with open(EVENTS_PATH, "w") as event_file:
-                    event_file.write(f"{id},0,0")
+                    event_file.write(f"{text},0,0")
             last_id = id
         sleep_ms(300)
 
