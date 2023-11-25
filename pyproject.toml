@@ -11,6 +11,7 @@ requests = "^2.31.0"
 pydub = "^0.25.1"
 simpleaudio = "^1.0.4"
 pytube = "^15.0.0"
+piicodev = "^1.10.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.11.0"

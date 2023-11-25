@@ -2,6 +2,8 @@ import os
 from multiprocessing import Process
 from pydub import AudioSegment, playback
 from finyl.settings import BASE_PATH, DOWNLOAD_PATH, EVENTS_PATH
+from PiicoDev_RFID import PiicoDev_RFID
+from PiicoDev_Unified import sleep_ms
 
 
 # TODO: move to preferences
@@ -33,6 +35,22 @@ def init_event_file() -> None:
             event_file.write("")
     else:
         print(f"{EVENTS_PATH} exists")
+
+
+def nfc_listen() -> None:
+    """Listen to nfc events and log them in events.txt"""
+    rfid = PiicoDev_RFID()  # Initialise the RFID module
+
+    print("NFC module is listening...")
+    last_id = None
+    while True:
+        if rfid.tagPresent():  # if an RFID tag is present
+            id = rfid.readID()  # get the id
+            if last_id != id:
+                with open(EVENTS_PATH, "w") as event_file:
+                    event_file.write(f"{id},0,0")
+            last_id = id
+        sleep_ms(300)
 
 
 def initialize(preferences: dict) -> None:
