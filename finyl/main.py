@@ -1,8 +1,8 @@
 import signal
 import time
 from multiprocessing import Process
-from finyl.settings import EVENTS_PATH
-from finyl.utils import initialize, nfc_listen
+from finyl.settings import EVENTS_PATH, ENV
+from finyl.utils import initialize
 from finyl.yt_album import Album
 from finyl.audio_player import Player
 
@@ -22,9 +22,17 @@ def listen() -> str:
         return last_line
 
 
+def check_start_nfc() -> Process:
+    if ENV != "DEV":
+        from finyl.nfc import nfc_listen
+
+        nfc_process = Process(target=nfc_listen, args=())
+        nfc_process.start()
+        return nfc_process
+
+
 def start() -> None:
-    nfc_process = Process(target=nfc_listen, args=())
-    nfc_process.start()
+    nfc_process = check_start_nfc()
     player_process = None
 
     def handler(signum, frame):
@@ -32,7 +40,8 @@ def start() -> None:
         try:
             if player_process:
                 player_process.terminate()
-            nfc_process.terminate()
+            if nfc_process:
+                nfc_process.terminate()
         except Exception as e:
             print(e)
         exit(1)

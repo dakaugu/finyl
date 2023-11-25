@@ -1,0 +1,24 @@
+import re
+from PiicoDev_RFID import PiicoDev_RFID
+from PiicoDev_Unified import sleep_ms
+from finyl.settings import EVENTS_PATH
+
+
+def nfc_listen() -> None:
+    """Listen to nfc events and log them in events.txt"""
+    rfid = PiicoDev_RFID()  # Initialise the RFID module
+
+    print("NFC module is listening...")
+    last_text = None
+    while True:
+        if rfid.tagPresent():  # if an RFID tag is present
+            final_text = ""
+            raw_text = rfid.readText()  # get the id
+            rtext = re.search("finyl/(.*)/finyl/", raw_text)
+            if rtext:
+                final_text = rtext.group(1)
+            if last_text != final_text:
+                with open(EVENTS_PATH, "w") as event_file:
+                    event_file.write(f"{final_text},0,0")
+            last_text = final_text
+        sleep_ms(300)
