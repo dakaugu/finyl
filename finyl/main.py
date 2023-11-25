@@ -50,14 +50,14 @@ def start() -> None:
     initialize(PREFERENCES)
     print("Listening to new events...")
 
-    last_command = None
+    last_event = None
     while True:
         time.sleep(1)
-        command = listen()
-        command_args = command.split(",")
-        if command and command != last_command:
+        event = listen()
+        command_args = event.split(",") if event else []
+        if event and event != last_event:
             print("New event found:")
-            print(command)
+            print(event)
             if player_process:
                 player_process.terminate()
             if command_args[0] == "stop":
@@ -75,4 +75,4 @@ def start() -> None:
                     ),
                 )
                 player_process.start()
-            last_command = command
+            last_event = event
