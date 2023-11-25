@@ -32,7 +32,9 @@ def init_event_file() -> None:
         with open(EVENTS_PATH, "w") as event_file:
             event_file.write("")
     else:
-        print(f"{EVENTS_PATH} exists")
+        print(f"{EVENTS_PATH} exists, clearing it!")
+        with open(EVENTS_PATH, "w") as event_file:
+            event_file.write("")
 
 
 def initialize(preferences: dict) -> None:
