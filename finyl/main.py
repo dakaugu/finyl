@@ -6,21 +6,14 @@ from finyl.settings import EVENTS_PATH
 from finyl.utils import initialize
 
 
-PLAYER_PID = None
 PREFERENCES = {"vinyl_feel": 0}
 
 
-def handler(signum, frame):
-    print("shutting down player")
-    try:
-        if PLAYER_PID:
-            os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
-    except Exception as e:
-        print(e)
-    exit(1)
-
-
-def listen():
+def listen() -> str:
+    """Listen to new events triggered by nfc reader activities or button presses
+    A new line is added typically if the nfc tag is different from the last event
+    or a button press is triggered
+    """
     with open(EVENTS_PATH) as f:
         last_line = None
         for line in f:
@@ -28,7 +21,18 @@ def listen():
         return last_line
 
 
-if __name__ == "__main__":
+def start() -> None:
+    player_pid = 0
+
+    def handler(signum, frame):
+        print("shutting down player")
+        try:
+            if player_pid:
+                os.killpg(os.getpgid(player_pid), signal.SIGKILL)
+        except Exception as e:
+            print(e)
+        exit(1)
+
     signal.signal(signal.SIGINT, handler)
     initialize(PREFERENCES)
     print("Listening to new events...")
@@ -40,14 +44,16 @@ if __name__ == "__main__":
         if command and command != last_command:
             print("New event found:")
             print(command)
-            if PLAYER_PID:
-                os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
-                PLAYER_PID = None
+            if player_pid:
+                # TODO: or try catch here
+                os.killpg(os.getpgid(player_pid), signal.SIGKILL)
+                player_pid = 0
             if command == "stop":
                 pass
             else:
+                # TODO: try catch then dont modify pid
                 player_process = subprocess.Popen(
                     f"python3 finyl/play.py {command}", shell=True, preexec_fn=os.setsid
                 )
-                PLAYER_PID = player_process.pid
+                player_pid = player_process.pid
             last_command = command
