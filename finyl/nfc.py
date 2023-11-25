@@ -17,7 +17,7 @@ def nfc_listen() -> None:
             rtext = re.search("finyl/(.*)/finyl/", raw_text)
             if rtext:
                 final_text = rtext.group(1)
-            if last_text != final_text:
+            if final_text and last_text != final_text:
                 with open(EVENTS_PATH, "w") as event_file:
                     event_file.write(f"{final_text},0,0")
             last_text = final_text
