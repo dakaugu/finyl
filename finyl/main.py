@@ -23,6 +23,7 @@ def listen() -> str:
 
 
 def check_start_nfc() -> Process:
+    """Run the nfc listen process if we are in a Pi environment"""
     if ENV != "DEV":
         from finyl.nfc import nfc_listen
 
