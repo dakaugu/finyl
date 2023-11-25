@@ -17,7 +17,8 @@ class Player:
         self.cur_audio = 1
 
     def play_audio(self, file_path: str, offset: int) -> None:
-        sound = AudioSegment.from_file(file_path)
+        # -nostdin allows us to play audio in the background
+        sound = AudioSegment.from_file(file_path, parameters=["-nostdin"])
         if offset:
             sound = sound[-(sound.duration_seconds - offset) * 1000 :]
         self.state = State.PLAYING
