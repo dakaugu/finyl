@@ -1,9 +1,10 @@
-import os
 import signal
-import subprocess
 import time
+from multiprocessing import Process
 from finyl.settings import EVENTS_PATH
 from finyl.utils import initialize
+from finyl.yt_album import Album
+from finyl.audio_player import Player
 
 
 PREFERENCES = {"vinyl_feel": 0}
@@ -22,13 +23,13 @@ def listen() -> str:
 
 
 def start() -> None:
-    player_pid = 0
+    player_process = None
 
     def handler(signum, frame):
         print("shutting down player")
         try:
-            if player_pid:
-                os.killpg(os.getpgid(player_pid), signal.SIGKILL)
+            if player_process:
+                player_process.terminate()
         except Exception as e:
             print(e)
         exit(1)
@@ -41,19 +42,25 @@ def start() -> None:
     while True:
         time.sleep(1)
         command = listen()
+        command_args = command.split(",")
         if command and command != last_command:
             print("New event found:")
             print(command)
-            if player_pid:
-                # TODO: or try catch here
-                os.killpg(os.getpgid(player_pid), signal.SIGKILL)
-                player_pid = 0
-            if command == "stop":
+            if player_process:
+                player_process.terminate()
+            if command_args[0] == "stop":
                 pass
             else:
-                # TODO: try catch then dont modify pid
-                player_process = subprocess.Popen(
-                    f"python3 finyl/play.py {command}", shell=True, preexec_fn=os.setsid
+                album = Album(command_args[0])
+                Process(target=album.download, args=()).start()
+                player = Player()
+                player_process = Process(
+                    target=player.play_album,
+                    args=(
+                        album,
+                        int(command_args[1]),  # track
+                        int(command_args[2]),  # offset (start in seconds)
+                    ),
                 )
-                player_pid = player_process.pid
+                player_process.start()
             last_command = command
