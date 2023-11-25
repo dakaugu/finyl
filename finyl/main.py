@@ -1,7 +1,7 @@
 import signal
 import time
 from multiprocessing import Process
-from finyl.settings import EVENTS_PATH
+from finyl.settings import EVENTS_PATH, ENV
 from finyl.utils import initialize
 from finyl.yt_album import Album
 from finyl.audio_player import Player
@@ -22,7 +22,18 @@ def listen() -> str:
         return last_line
 
 
+def check_start_nfc() -> Process:
+    """Run the nfc listen process if we are in a Pi environment"""
+    if ENV != "DEV":
+        from finyl.nfc import nfc_listen
+
+        nfc_process = Process(target=nfc_listen, args=())
+        nfc_process.start()
+        return nfc_process
+
+
 def start() -> None:
+    nfc_process = check_start_nfc()
     player_process = None
 
     def handler(signum, frame):
@@ -30,6 +41,8 @@ def start() -> None:
         try:
             if player_process:
                 player_process.terminate()
+            if nfc_process:
+                nfc_process.terminate()
         except Exception as e:
             print(e)
         exit(1)
@@ -38,14 +51,14 @@ def start() -> None:
     initialize(PREFERENCES)
     print("Listening to new events...")
 
-    last_command = None
+    last_event = None
     while True:
         time.sleep(1)
-        command = listen()
-        command_args = command.split(",")
-        if command and command != last_command:
+        event = listen()
+        command_args = event.split(",") if event else []
+        if event and event != last_event:
             print("New event found:")
-            print(command)
+            print(event)
             if player_process:
                 player_process.terminate()
             if command_args[0] == "stop":
@@ -63,4 +76,4 @@ def start() -> None:
                     ),
                 )
                 player_process.start()
-            last_command = command
+            last_event = event
