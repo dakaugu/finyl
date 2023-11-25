@@ -1,12 +1,12 @@
-FROM ubuntu:22.04
+FROM debian:12
 
-WORKDIR /finyl
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV FINYL_ENV TEST
+ENV FINYL_INSTALL PI
+ENV FINYL_ENV FINYL_PI
 
-COPY . .
+COPY dist/finyl-0.1.0.tar.gz bin/
+COPY install.sh .
 
 # remove sudo occurence
 RUN sed -i 's/sudo//g' install.sh
-

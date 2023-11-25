@@ -1,26 +1,20 @@
-import os
 import signal
-import subprocess
 import time
+from multiprocessing import Process
 from finyl.settings import EVENTS_PATH
 from finyl.utils import initialize
+from finyl.yt_album import Album
+from finyl.audio_player import Player
 
 
-PLAYER_PID = None
 PREFERENCES = {"vinyl_feel": 0}
 
 
-def handler(signum, frame):
-    print("shutting down player")
-    try:
-        if PLAYER_PID:
-            os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
-    except Exception as e:
-        print(e)
-    exit(1)
-
-
-def listen():
+def listen() -> str:
+    """Listen to new events triggered by nfc reader activities or button presses
+    A new line is added typically if the nfc tag is different from the last event
+    or a button press is triggered
+    """
     with open(EVENTS_PATH) as f:
         last_line = None
         for line in f:
@@ -28,7 +22,18 @@ def listen():
         return last_line
 
 
-if __name__ == "__main__":
+def start() -> None:
+    player_process = None
+
+    def handler(signum, frame):
+        print("shutting down player")
+        try:
+            if player_process:
+                player_process.terminate()
+        except Exception as e:
+            print(e)
+        exit(1)
+
     signal.signal(signal.SIGINT, handler)
     initialize(PREFERENCES)
     print("Listening to new events...")
@@ -37,17 +42,25 @@ if __name__ == "__main__":
     while True:
         time.sleep(1)
         command = listen()
+        command_args = command.split(",")
         if command and command != last_command:
             print("New event found:")
             print(command)
-            if PLAYER_PID:
-                os.killpg(os.getpgid(PLAYER_PID), signal.SIGKILL)
-                PLAYER_PID = None
-            if command == "stop":
+            if player_process:
+                player_process.terminate()
+            if command_args[0] == "stop":
                 pass
             else:
-                player_process = subprocess.Popen(
-                    f"python3 finyl/play.py {command}", shell=True, preexec_fn=os.setsid
+                album = Album(command_args[0])
+                Process(target=album.download, args=()).start()
+                player = Player()
+                player_process = Process(
+                    target=player.play_album,
+                    args=(
+                        album,
+                        int(command_args[1]),  # track
+                        int(command_args[2]),  # offset (start in seconds)
+                    ),
                 )
-                PLAYER_PID = player_process.pid
+                player_process.start()
             last_command = command
