@@ -29,12 +29,11 @@ def init_event_file() -> None:
     """Create event file that finyl listens to for activities"""
     if not os.path.exists(EVENTS_PATH):
         print("finyl event file does not exist. Creating it... ")
-        with open(EVENTS_PATH, "w") as event_file:
-            event_file.write("")
     else:
         print(f"{EVENTS_PATH} exists, clearing it!")
-        with open(EVENTS_PATH, "w") as event_file:
-            event_file.write("")
+
+    with open(EVENTS_PATH, "w") as event_file:
+        event_file.write("")
 
 
 def initialize(preferences: dict) -> None:

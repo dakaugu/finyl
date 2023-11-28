@@ -12,15 +12,16 @@ def nfc_listen() -> None:
     last_text = None
     while True:
         if rfid.tagPresent():  # if an RFID tag is present
-            final_text = ""
             raw_text = rfid.readText()  # get the id
+            if last_text == raw_text:
+                continue
             # Some characters are being appended at the start and end of the text
             # adding `finyl/text/finyl/` to the string tag to get only necessary text
             rtext = re.search("finyl/(.*)/finyl/", raw_text)
             if rtext:
                 final_text = rtext.group(1)
-            if final_text and last_text != final_text:
-                with open(EVENTS_PATH, "w") as event_file:
-                    event_file.write(f"{final_text},0,0")
-            last_text = final_text
+                if final_text:
+                    with open(EVENTS_PATH, "w") as event_file:
+                        event_file.write(f"{final_text},0,0")
+            last_text = raw_text
         sleep_ms(300)
