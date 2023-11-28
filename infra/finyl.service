@@ -1,0 +1,16 @@
+[Unit]
+Description=Finyl service (A software that runs a virtual vinyl player)
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/start_finyl.sh
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
