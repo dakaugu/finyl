@@ -1,5 +1,4 @@
 #!/bin/bash
-_user="$(id -u -n)"
 
 echo "Building finyl!"
 
@@ -21,7 +20,7 @@ sudo nala install -y \
 
 echo "Please configure raspi-config, and enable i2c and audio source"
 
-echo "Environment is not dev. Installing finyl from package"
+echo "Installing finyl!"
 pip install finyl-0.1.0.tar.gz --break-system-packages
 
 echo "Add permission to finyl files"
