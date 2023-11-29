@@ -42,8 +42,7 @@ class Player:
                 if offset:
                     offset = 0  # reset offset to start the next song from top
             else:
-                print("Track not yet downloaded!")
-                time.sleep(1)
+                time.sleep(0.1)
         self.cur_audio = 1  # reset
 
     def track_position(self):
