@@ -1,7 +1,17 @@
 import os
 from multiprocessing import Process
+from threading import Thread
+
 from pydub import AudioSegment, playback
-from finyl.settings import BASE_PATH, DOWNLOAD_PATH, EVENTS_PATH
+from finyl.settings import BASE_PATH, DOWNLOAD_PATH, EVENTS_PATH, ENV
+
+
+def play_in_background(file_path: str) -> None:
+    """Play a sound in background"""
+    sound = AudioSegment.from_file(
+        os.path.dirname(__file__) + file_path, parameters=["-nostdin"]
+    )
+    Thread(target=playback.play, args=(sound,)).start()
 
 
 # TODO: move to preferences
@@ -43,3 +53,5 @@ def initialize(preferences: dict) -> None:
     if preferences.get("vinyl_feel") == 1:
         p = Process(target=play_vinyl_crackle)
         p.start()
+    if ENV != "DEV":
+        play_in_background("/sounds/finyl_start.mp3")

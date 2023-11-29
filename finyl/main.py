@@ -2,7 +2,7 @@ import signal
 import time
 from multiprocessing import Process
 from finyl.settings import EVENTS_PATH, ENV
-from finyl.utils import initialize
+from finyl.utils import initialize, play_in_background
 from finyl.yt_album import Album
 from finyl.audio_player import Player
 
@@ -61,6 +61,7 @@ def start() -> None:
             print(event)
             if player_process:
                 player_process.terminate()
+            play_in_background("/sounds/nfc_confirmed.wav")
             if command_args[0] == "stop":
                 pass
             else:
