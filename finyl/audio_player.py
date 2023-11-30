@@ -1,4 +1,4 @@
-import os
+import json
 import time
 
 from enum import Enum
@@ -12,9 +12,14 @@ class State(Enum):
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, album: Album):
         self.state = State.READY
         self.cur_audio = 1
+        self.album = album
+
+    def download_status(self) -> dict:
+        with open(self.album.metadata_path, "r") as f:
+            return json.load(f)
 
     def play_audio(self, file_path: str, offset: int) -> None:
         # -nostdin allows us to play audio in the background
@@ -25,17 +30,14 @@ class Player:
         playback.play(sound)
         self.state = State.READY
 
-    def play_album(self, album: Album, track: int, offset: int) -> None:
+    def play_album(self, track: int, offset: int) -> None:
         """play a whole playlist from directory"""
-        print(f"Now playing: {album.playlist.title}")
+        print(f"Now playing: {self.album.playlist.title}")
         if track:
             self.cur_audio = track
-        while self.cur_audio <= album.playlist_items:
-            cur = f"{album.playlist_path}/{self.cur_audio}.mp3"
-            if (
-                os.path.exists(f"{album.playlist_path}/{self.cur_audio+1}.mp3")
-                or self.cur_audio >= album.playlist_items
-            ):  # TODO: fix s + 1 hack ...should be cur
+        while self.cur_audio <= self.album.playlist_items:
+            if self.download_status().get(str(self.cur_audio), 0):
+                cur = f"{self.album.playlist_path}/{self.cur_audio}.mp3"
                 print(f"Now playing: {self.cur_audio}")
                 self.play_audio(cur, offset)
                 self.cur_audio = self.cur_audio + 1

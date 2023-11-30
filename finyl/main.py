@@ -67,11 +67,10 @@ def start() -> None:
             else:
                 album = Album(command_args[0])
                 Process(target=album.download, args=()).start()
-                player = Player()
+                player = Player(album)
                 player_process = Process(
                     target=player.play_album,
                     args=(
-                        album,
                         int(command_args[1]),  # track
                         int(command_args[2]),  # offset (start in seconds)
                     ),
