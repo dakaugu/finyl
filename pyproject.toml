@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "finyl"
-version = "0.2.0"
+version = "0.2.1"
 description = "Software that runs a virtual vinyl player."
 authors = ["dakaugu <dakaugu@gmail.com>"]
 readme = "README.md"
