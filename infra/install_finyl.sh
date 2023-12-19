@@ -21,7 +21,7 @@ sudo nala install -y \
 echo "Please configure raspi-config, and enable i2c and audio source"
 
 echo "Installing finyl!"
-pip install finyl-0.1.0.tar.gz --break-system-packages
+pip install finyl-0.2.1.tar.gz --break-system-packages
 
 echo "Add permission to finyl files"
 sudo chmod 777 /var/
