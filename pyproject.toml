@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "finyl"
-version = "0.2.1"
+version = "0.2.2"
 description = "Software that runs a virtual vinyl player."
 authors = ["dakaugu <dakaugu@gmail.com>"]
 readme = "README.md"
+exclude = ["finyl/voice/*"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.11.1"
 requests = "^2.31.0"
 pydub = "^0.25.1"
-simpleaudio = "^1.0.4"
 pytube = "^15.0.0"
 piicodev = "^1.10.0"
 
@@ -21,6 +21,7 @@ mypy = "^1.7.1"
 pytest = "^7.4.3"
 pytest-mock = "^3.12.0"
 pre-commit = "^3.5.0"
+tts = "^0.22.0"
 
 [build-system]
 requires = ["poetry-core"]
