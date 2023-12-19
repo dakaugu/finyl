@@ -1,10 +1,11 @@
-import pytest
-import os
-
 from unittest.mock import Mock
-from finyl.settings import DOWNLOAD_PATH
-from finyl.yt_album import Album
+
+import pytest
 from pydub import AudioSegment, playback
+
+from finyl.settings import DOWNLOAD_PATH
+from finyl.sounds import PING
+from finyl.yt_album import Album
 
 
 @pytest.fixture
@@ -25,7 +26,5 @@ def test_album_has_playlist_info(mock_get):
 
 
 def test_audio():
-    sound = AudioSegment.from_file(
-        os.path.dirname(__file__) + "/../finyl/sounds/ping.mp3"
-    )
+    sound = AudioSegment.from_file(PING)
     playback.play(sound)

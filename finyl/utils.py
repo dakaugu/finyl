@@ -1,25 +1,26 @@
 import os
+import subprocess
 from multiprocessing import Process
 from threading import Thread
+from sys import platform
 
+import requests
 from pydub import AudioSegment, playback
+
 from finyl.settings import BASE_PATH, DOWNLOAD_PATH, EVENTS_PATH, ENV
+from finyl.sounds import FINYL_START, VINYL_SOUND, WIFI_CONNECTED
 
 
 def play_in_background(file_path: str) -> None:
     """Play a sound in background"""
-    sound = AudioSegment.from_file(
-        os.path.dirname(__file__) + file_path, parameters=["-nostdin"]
-    )
+    sound = AudioSegment.from_file(file_path, parameters=["-nostdin"])
     Thread(target=playback.play, args=(sound,)).start()
 
 
 # TODO: move to preferences
 def play_vinyl_crackle() -> None:
     """Play vinyl crackling in the background while playing records"""
-    sound = AudioSegment.from_file(
-        os.path.dirname(__file__) + "/sounds/vinyl_crackle.mp3"
-    )
+    sound = AudioSegment.from_file(VINYL_SOUND)
     sound = sound - 27  # -27db play it quieter than main audio
     playback.play(sound)
     play_vinyl_crackle()
@@ -46,6 +47,35 @@ def init_event_file() -> None:
         event_file.write("")
 
 
+def connect_wifi(ssid: str, password: str) -> None:
+    """Runs `nmcli` command to connect device to Wi-Fi.
+    Raspberry Pi OS comes with `nmcli` out of the box. We will use it to
+    connect to the targeted Wi-Fi network
+    """
+    if platform != "darwin":
+        subprocess.Popen(f"nmcli d wifi connect {ssid} password {password}", shell=True)
+    is_connected = check_internet_connectivity()
+    if not is_connected:
+        pass
+    if is_connected == 1:
+        play_in_background(WIFI_CONNECTED)
+
+
+def check_internet_connectivity() -> int:
+    """Check for if internet states
+    - not connected: 0
+    - Connected and working: 1
+    - connected and not working: 2
+    """
+    try:
+        requests.get("https://httpbin.org/ip")
+    except requests.ConnectionError:
+        return 0
+    except requests.Timeout:
+        return 2
+    return 1
+
+
 def initialize(preferences: dict) -> None:
     print("Initializing...")
     init_dirs()
@@ -54,4 +84,4 @@ def initialize(preferences: dict) -> None:
         p = Process(target=play_vinyl_crackle)
         p.start()
     if ENV != "DEV":
-        play_in_background("/sounds/finyl_start.mp3")
+        play_in_background(FINYL_START)
