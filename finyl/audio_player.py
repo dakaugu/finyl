@@ -1,8 +1,9 @@
 import json
 import time
-
 from enum import Enum
+
 from pydub import AudioSegment, playback
+
 from finyl.yt_album import Album
 
 
@@ -32,7 +33,8 @@ class Player:
 
     def play_album(self, track: int, offset: int) -> None:
         """play a whole playlist from directory"""
-        print(f"Now playing: {self.album.playlist.title}")
+        title = self.album.playlist.title if self.album.playlist else "N/A (offline)"
+        print(f"Now playing: {title}")
         if track:
             self.cur_audio = track
         while self.cur_audio <= self.album.playlist_items:

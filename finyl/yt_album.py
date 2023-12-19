@@ -1,25 +1,38 @@
 import json
 import os
+from urllib.error import URLError
+
 from pytube import Playlist
+
 from finyl.settings import YT_URI, DOWNLOAD_PATH
 
 
 class Album:
-    def __init__(self, id):
+    def __init__(self, id: str):
         self.id = id
         self.playlist_path = f"{DOWNLOAD_PATH}{id}"
         self.metadata_path = f"{DOWNLOAD_PATH}{id}/metadata.json"
-        self.playlist = None
-        self.get(id)
+        self.playlist_items = 0
+        self.playlist = self.get(id)
         self.download_status = {}
 
-    def get(self, playlist_id: str) -> None:
+    def get(self, playlist_id: str) -> Playlist:
         """Fetch playlist info"""
-        self.playlist = Playlist(YT_URI + "playlist?list=" + playlist_id)
-        if self.playlist:
-            self.playlist_items = len(self.playlist)
+        try:
+            self.playlist = Playlist(YT_URI + "playlist?list=" + playlist_id)
+            if self.playlist:
+                self.playlist_items = len(self.playlist)
+        except URLError as e:
+            print(e)
+            self.playlist = None
+            count = 0
+            for file in os.listdir(self.playlist_path):
+                if file.endswith(".mp3"):
+                    count += 1
+            self.playlist_items = count
+        return self.playlist
 
-    def update_track_download_status(self, track) -> None:
+    def update_track_download_status(self, track: int) -> None:
         """Update download status of a track
         1 -> downloaded
         0 -> not downloaded
@@ -42,7 +55,7 @@ class Album:
                 json.dump({}, f)
 
         if not self.playlist:
-            self.playlist = Playlist(YT_URI + "playlist?list=" + self.id)
+            return
 
         if overwrite:  # TODO: TOBEDONE
             pass

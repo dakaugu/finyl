@@ -1,11 +1,12 @@
 import signal
 import time
 from multiprocessing import Process
+
+from finyl.audio_player import Player
 from finyl.settings import EVENTS_PATH, ENV
+from finyl.sounds import NFC_CONFIRMED
 from finyl.utils import initialize, play_in_background
 from finyl.yt_album import Album
-from finyl.audio_player import Player
-
 
 PREFERENCES = {"vinyl_feel": 0}
 
@@ -61,7 +62,7 @@ def start() -> None:
             print(event)
             if player_process:
                 player_process.terminate()
-            play_in_background("/sounds/nfc_confirmed.wav")
+            play_in_background(NFC_CONFIRMED)
             if command_args[0] == "stop":
                 pass
             else:
