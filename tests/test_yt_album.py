@@ -11,7 +11,7 @@ from finyl.yt_album import Album
 @pytest.fixture
 def mock_get(mocker):
     mock = Mock()
-    mocker.patch("finyl.yt_album.Album.get", return_value=mock)
+    mocker.patch("finyl.yt_album.Album.get", return_value=None)
     return mock
 
 

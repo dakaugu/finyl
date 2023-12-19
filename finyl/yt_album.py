@@ -26,10 +26,11 @@ class Album:
             print(e)
             self.playlist = None
             count = 0
-            for file in os.listdir(self.playlist_path):
-                if file.endswith(".mp3"):
-                    count += 1
-            self.playlist_items = count
+            if os.path.exists(self.playlist_path):
+                for file in os.listdir(self.playlist_path):
+                    if file.endswith(".mp3"):
+                        count += 1
+                self.playlist_items = count
         return self.playlist
 
     def update_track_download_status(self, track: int) -> None:
