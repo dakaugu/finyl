@@ -2,11 +2,9 @@ import signal
 import time
 from multiprocessing import Process
 
-from finyl.audio_player import Player
+from finyl.actions import action_do
 from finyl.settings import EVENTS_PATH, ENV
-from finyl.sounds import NFC_CONFIRMED
-from finyl.utils import initialize, play_in_background
-from finyl.yt_album import Album
+from finyl.utils import initialize
 
 PREFERENCES = {"vinyl_feel": 0}
 
@@ -35,13 +33,13 @@ def check_start_nfc() -> Process:
 
 def start() -> None:
     nfc_process = check_start_nfc()
-    player_process = None
+    action_process = None
 
     def handler(signum, frame):
         print("shutting down player")
         try:
-            if player_process:
-                player_process.terminate()
+            if action_process:
+                action_process.terminate()
             if nfc_process:
                 nfc_process.terminate()
         except Exception as e:
@@ -50,31 +48,16 @@ def start() -> None:
 
     signal.signal(signal.SIGINT, handler)
     initialize(PREFERENCES)
-    print("Listening to new events...")
 
+    print("Listening to new events...")
     last_event = None
     while True:
         time.sleep(1)
         event = listen()
-        command_args = event.split(",") if event else []
         if event and event != last_event:
             print("New event found:")
             print(event)
-            if player_process:
-                player_process.terminate()
-            play_in_background(NFC_CONFIRMED)
-            if command_args[0] == "stop":
-                pass
-            else:
-                album = Album(command_args[0])
-                Process(target=album.download, args=()).start()
-                player = Player(album)
-                player_process = Process(
-                    target=player.play_album,
-                    args=(
-                        int(command_args[1]),  # track
-                        int(command_args[2]),  # offset (start in seconds)
-                    ),
-                )
-                player_process.start()
+            if action_process:
+                action_process.terminate()
+            action_process = action_do(event)
             last_event = event
