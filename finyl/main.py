@@ -2,6 +2,7 @@ import signal
 import time
 from multiprocessing import Process
 
+from finyl import logger
 from finyl.actions import action_do
 from finyl.settings import EVENTS_PATH, ENV
 from finyl.utils import initialize
@@ -36,27 +37,27 @@ def start() -> None:
     action_process = None
 
     def handler(signum, frame):
-        print("shutting down player")
+        logger.info("shutting down player")
         try:
             if action_process:
                 action_process.terminate()
             if nfc_process:
                 nfc_process.terminate()
         except Exception as e:
-            print(e)
+            logger.ERROR(e)
         exit(1)
 
     signal.signal(signal.SIGINT, handler)
     initialize(PREFERENCES)
 
-    print("Listening to new events...")
+    logger.info("Listening to new events...")
     last_event = None
     while True:
-        time.sleep(1)
+        time.sleep(0.1)
         event = listen()
         if event and event != last_event:
-            print("New event found:")
-            print(event)
+            logger.info("New event found:")
+            logger.info(event)
             if action_process:
                 action_process.terminate()
             action_process = action_do(event)

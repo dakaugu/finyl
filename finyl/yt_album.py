@@ -4,6 +4,7 @@ from urllib.error import URLError
 
 from pytube import Playlist
 
+from finyl import logger
 from finyl.settings import YT_URI, DOWNLOAD_PATH
 
 
@@ -23,7 +24,7 @@ class Album:
             if self.playlist:
                 self.playlist_items = len(self.playlist)
         except URLError as e:
-            print(e)
+            logger.error(e)
             self.playlist = None
             count = 0
             if os.path.exists(self.playlist_path):
@@ -46,7 +47,7 @@ class Album:
         """Creates path download songs
         overwrite: ignore file existence and remove older files
         """
-        print(f"{self.playlist_items} items to download")
+        logger.info(f"{self.playlist_items} items to download")
         if not os.path.exists(self.playlist_path):
             os.mkdir(self.playlist_path)
 
@@ -61,17 +62,15 @@ class Album:
         if overwrite:  # TODO: TOBEDONE
             pass
 
-        i = 1
-        for video in self.playlist.videos:
+        for i, video in enumerate(self.playlist.videos, 1):
             file_name = f"{self.playlist_path}/{i}.mp3"
 
             if os.path.exists(file_name) and not overwrite:
                 # TODO: if file exists but status is not downloaded overwrite
-                print(f"{file_name} already downloaded")
+                logger.info(f"{file_name} already downloaded")
                 self.update_track_download_status(i)
             else:
                 video.streams.filter().get_audio_only().download(filename=file_name)
                 self.update_track_download_status(i)
-                print(f"{i} downloaded")
-            i = i + 1
-        print("Done!")
+                logger.info(f"{i} downloaded")
+        logger.info("Done!")
