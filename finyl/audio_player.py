@@ -4,6 +4,7 @@ from enum import Enum
 
 from pydub import AudioSegment, playback
 
+from finyl import logger
 from finyl.yt_album import Album
 
 
@@ -34,13 +35,13 @@ class Player:
     def play_album(self, track: int, offset: int) -> None:
         """play a whole playlist from directory"""
         title = self.album.playlist.title if self.album.playlist else "N/A (offline)"
-        print(f"Now playing: {title}")
+        logger.info(f"Now playing: {title}")
         if track:
             self.cur_audio = track
         while self.cur_audio <= self.album.playlist_items:
             if self.download_status().get(str(self.cur_audio), 0):
                 cur = f"{self.album.playlist_path}/{self.cur_audio}.mp3"
-                print(f"Now playing: {self.cur_audio}")
+                logger.info(f"Now playing: {self.cur_audio}")
                 self.play_audio(cur, offset)
                 self.cur_audio = self.cur_audio + 1
                 if offset:
