@@ -10,10 +10,13 @@ from finyl.settings import BASE_PATH, DOWNLOAD_PATH, EVENTS_PATH, ENV
 from finyl.sounds import FINYL_START, VINYL_SOUND
 
 
-def play_in_background(file_path: str) -> None:
+def play_sound(file_path: str, background=False) -> None:
     """Play a sound in background"""
     sound = AudioSegment.from_file(file_path, parameters=["-nostdin"])
-    Thread(target=playback.play, args=(sound,)).start()
+    if background:
+        Thread(target=playback.play, args=(sound,)).start()
+    else:
+        playback.play(sound)
 
 
 # TODO: move to preferences
@@ -69,4 +72,4 @@ def initialize(preferences: dict) -> None:
         p = Process(target=play_vinyl_crackle)
         p.start()
     if ENV != "DEV":
-        play_in_background(FINYL_START)
+        play_sound(FINYL_START, background=True)

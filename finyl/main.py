@@ -1,5 +1,6 @@
 import signal
 import time
+from importlib import metadata
 from multiprocessing import Process
 
 from finyl import logger
@@ -7,6 +8,7 @@ from finyl.actions import action_do
 from finyl.settings import EVENTS_PATH, ENV
 from finyl.utils import initialize
 
+VERSION = metadata.version("finyl")
 PREFERENCES = {"vinyl_feel": 0}
 
 
@@ -33,6 +35,7 @@ def check_start_nfc() -> Process:
 
 
 def start() -> None:
+    logger.info(f"Finyl v{VERSION}")
     nfc_process = check_start_nfc()
     action_process = None
 

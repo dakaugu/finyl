@@ -7,7 +7,7 @@ from typing import Optional
 from finyl import logger
 from finyl.audio_player import Player
 from finyl.sounds import NFC_CONFIRMED, WIFI_CONNECTED
-from finyl.utils import play_in_background, check_internet_connectivity
+from finyl.utils import play_sound, check_internet_connectivity
 from finyl.yt_album import Album
 
 # This is added because of a pickling error with multiprocessing and globals()
@@ -27,7 +27,7 @@ def action(func):
     """Base interactions with valid finyl/*/finyl/ nfc payload"""
 
     def caller(*args):
-        play_in_background(NFC_CONFIRMED)
+        play_sound(NFC_CONFIRMED, background=True)
         func(*args)
 
     return caller
@@ -46,6 +46,7 @@ def action_do(command: str) -> Optional[Process]:
         args = tuple([finyl_eval(v) for v in args.split(",")])
     except ValueError:
         logger.error(f"Invalid command: {command}. action or arguments not provided!")
+        # play_sound(NFC_ERROR)  # TODO: need to revisit weird bug behind this
         return None
     try:
         action_process = Process(target=globals()[command], args=args)
@@ -57,6 +58,7 @@ def action_do(command: str) -> Optional[Process]:
                 logger.error(f"This action:{command} has not been implemented yet")
             case TypeError():
                 logger.error(f"Invalid arguments for action:{command}, args:{args}")
+        # play_sound(NFC_ERROR)  # TODO: need to revisit weird bug behind this
         logger.error(e)
         traceback = e.__traceback__
         while traceback:
@@ -98,4 +100,4 @@ def connect_wifi(ssid: str, password: str, *args) -> None:
     if not is_connected:
         pass
     if is_connected == 1:
-        play_in_background(WIFI_CONNECTED)
+        play_sound(WIFI_CONNECTED, background=True)

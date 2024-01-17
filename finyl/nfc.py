@@ -25,6 +25,6 @@ def nfc_listen() -> None:
                 final_text = rtext.group(1)
                 if final_text:
                     with open(EVENTS_PATH, "w") as event_file:
-                        event_file.write(f"{final_text},0,0")
+                        event_file.write(final_text)
             last_text = raw_text
         sleep_ms(300)

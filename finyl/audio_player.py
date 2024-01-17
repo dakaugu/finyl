@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from enum import Enum
 
@@ -36,6 +37,8 @@ class Player:
         """play a whole playlist from directory"""
         title = self.album.playlist.title if self.album.playlist else "N/A (offline)"
         logger.info(f"Now playing: {title}")
+        if not os.path.exists(self.album.playlist_path):
+            logger.warning("No directory for this album. Nothing to play")
         if track:
             self.cur_audio = track
         while self.cur_audio <= self.album.playlist_items:
