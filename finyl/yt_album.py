@@ -6,6 +6,8 @@ from pytube import Playlist
 
 from finyl import logger
 from finyl.settings import YT_URI, DOWNLOAD_PATH
+from finyl.sounds import NFC_ERROR
+from finyl.utils import play_sound
 
 
 class Album:
@@ -24,7 +26,7 @@ class Album:
             if self.playlist:
                 self.playlist_items = len(self.playlist)
         except URLError as e:
-            logger.error(e)
+            logger.error(f"Could not find album with id {self.id}. {e}")
             self.playlist = None
             count = 0
             if os.path.exists(self.playlist_path):
@@ -32,6 +34,8 @@ class Album:
                     if file.endswith(".mp3"):
                         count += 1
                 self.playlist_items = count
+            else:
+                play_sound(NFC_ERROR)
         return self.playlist
 
     def update_track_download_status(self, track: int) -> None:
@@ -47,6 +51,9 @@ class Album:
         """Creates path download songs
         overwrite: ignore file existence and remove older files
         """
+        if not self.playlist:
+            logger.warning("Playlist is null. Nothing to download. playing offline")
+            return
         logger.info(f"{self.playlist_items} items to download")
         if not os.path.exists(self.playlist_path):
             os.mkdir(self.playlist_path)
