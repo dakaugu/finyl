@@ -14,7 +14,7 @@ pytube = "^15.0.0"
 piicodev = "^1.10.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
+black = "^24.4.0"
 ipython = "^8.19.0"
 flake8 = "^6.1.0"
 mypy = "^1.8.0"
