@@ -8,7 +8,7 @@ exclude = ["finyl/voice/*"]
 
 [tool.poetry.dependencies]
 python = "3.11.1"
-requests = "^2.31.0"
+requests = "^2.32.2"
 pydub = "^0.25.1"
 pytube = "^15.0.0"
 piicodev = "^1.10.0"
